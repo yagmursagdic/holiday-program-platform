@@ -7,8 +7,8 @@ services:
       - "8081:8081"
     environment:
       - DATABASE_URL=jdbc:postgresql://db:5432/accounting_db
-      - DATABASE_USERNAME=your_username
-      - DATABASE_PASSWORD=your_password
+      - DATABASE_USERNAME=accoutingUser
+      - DATABASE_PASSWORD=accoutingUser_pw_geheim
   term-service:
     build:
       context: ./TermService
@@ -16,13 +16,13 @@ services:
       - "8082:8082"
     environment:
       - DATABASE_URL=jdbc:postgresql://db:5432/term_db
-      - DATABASE_USERNAME=your_username
-      - DATABASE_PASSWORD=your_password
+      - DATABASE_USERNAME=termUser
+      - DATABASE_PASSWORD=termUser_pw_geheim
   db:
     image: postgres:latest
     environment:
       POSTGRES_DB: accounting_db
-      POSTGRES_USER: your_username
-      POSTGRES_PASSWORD: your_password
+      POSTGRES_USER: accoutingUser
+      POSTGRES_PASSWORD: accoutingUser_pw_geheim
     ports:
       - "5432:5432"
