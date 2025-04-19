@@ -21,7 +21,27 @@
 - **Messaging**: Apache Kafka
 
 ### Why This Technology?
-We chose Java for its robustness and Micronaut for its lightweight microservice capabilities. PostgreSQL is a reliable relational database, and Kafka will facilitate asynchronous communication between our services.
+We chose Java for its reliability and the many tools available for building applications. Micronaut was selected because it is a lightweight framework that helps us create microservices quickly and efficiently. PostgreSQL is a reliable relational database, and Kafka will facilitate asynchronous communication between our services.
+
+Here are some key benefits of using Micronaut:
+
+#### 1. Fast Startup Times: 
+
+Micronaut applications start up quickly, which is important for cloud environments where we want our services to be ready to use as soon as possible.
+
+#### 2. Low Memory Usage: 
+
+Micronaut uses less memory compared to other frameworks. This means our application can run on smaller servers, saving costs and resources.
+
+#### 3. Easy to Use: 
+Micronaut is designed to be simple and straightforward, making it easier for developers to build and maintain applications.
+
+#### 4. Modular Design: 
+We can choose only the parts we need for our application, which keeps it lightweight and efficient. This means we don’t have to include unnecessary features that could slow things down.
+
+#### 5. Supports Modern Programming Styles: 
+Micronaut allows us to use reactive programming, which helps our services respond quickly to many users at the same time without slowing down.
+
 
 ## Current Progress
 - Created the project structure for both microservices.
