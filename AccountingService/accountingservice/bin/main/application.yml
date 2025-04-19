@@ -1,0 +1,25 @@
+#Fri Apr 18 16:25:51 CEST 2025
+micronaut:
+  application:
+    name: accountingservice
+  server:
+    port: 8081
+
+datasources:
+  default:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driverClassName: org.postgresql.Driver
+
+jpa:
+  default:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+        show_sql: true
+
+kafka:
+  bootstrap:
+    servers: localhost:9092

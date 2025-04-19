@@ -1,28 +1,42 @@
-version: '3.8'
+
 services:
-  accounting-service:
-    build:
-      context: ./AccountingService
-    ports:
-      - "8081:8081"
-    environment:
-      - DATABASE_URL=jdbc:postgresql://db:5432/accounting_db
-      - DATABASE_USERNAME=accoutingUser
-      - DATABASE_PASSWORD=accoutingUser_pw_geheim
-  term-service:
-    build:
-      context: ./TermService
-    ports:
-      - "8082:8082"
-    environment:
-      - DATABASE_URL=jdbc:postgresql://db:5432/term_db
-      - DATABASE_USERNAME=termUser
-      - DATABASE_PASSWORD=termUser_pw_geheim
   db:
     image: postgres:latest
-    environment:
-      POSTGRES_DB: accounting_db
-      POSTGRES_USER: accoutingUser
-      POSTGRES_PASSWORD: accoutingUser_pw_geheim
     ports:
       - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  accounting-service:
+    build:
+      context: ./AccountingService/accountingservice
+    ports:
+      - "8081:8081"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/accounting_db
+      DATABASE_USERNAME: accountinguser
+      DATABASE_PASSWORD: accountingUser_pw_geheim
+
+  term-service:
+    build:
+      context: ./TermService/termservice
+    ports:
+      - "8082:8082"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/term_db
+      DATABASE_USERNAME: termuser
+      DATABASE_PASSWORD: termUser_pw_geheim
+ 
