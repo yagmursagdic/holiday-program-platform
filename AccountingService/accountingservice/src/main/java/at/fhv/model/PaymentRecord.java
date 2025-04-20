@@ -15,6 +15,42 @@ public class PaymentRecord {
 
     private boolean paid;
 
-    public PaymentRecord() {}
+    public PaymentRecord() {
+    }
+    
+    // getters
+    public Long getId() {
+      return id;
+    }
+
+    public Long getUserId() {
+      return userId;
+    }
+
+    public Long getTermId() {
+      return termId;
+    }
+
+    public boolean getPaid() {
+      return paid;
+    }
+
+    // setters
+    public void setId(Long id) {
+      this.id = id;
+    }
+
+    public void setUserId(Long userId) {
+      this.userId = userId;
+    }
+
+    public void setTermId(Long termId) {
+      this.termId = termId;
+    }
+
+    public void setPaid(boolean paid) {
+      this.paid = paid;
+    }
+
 
 }

@@ -67,11 +67,18 @@ Micronaut allows us to use reactive programming, which helps our services respon
 
 3. **Build the Project**
 
-   If you want to build the project locally (optional), you can use the following command:
+   If you want to build the project locally (optional), cd into the service folder: and use the following command:
+
+```bash
+   cd AccountingService/accountingservice OR cd TermService/termservice  
+```
+
+    And use the following command:
 
 ```bash
    ./gradlew build
 ```
+
 
 This command will compile the code and run tests. Ensure that you have Gradle installed, or use the Gradle wrapper included in the project.
 
