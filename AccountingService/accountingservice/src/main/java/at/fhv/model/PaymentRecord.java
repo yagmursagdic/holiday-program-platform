@@ -1,7 +1,9 @@
 package at.fhv.model;
 
+import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 
+@Serdeable
 @Entity
 @Table(name = "payment_records")
 public class PaymentRecord {
@@ -16,8 +18,16 @@ public class PaymentRecord {
     private boolean paid;
 
     public PaymentRecord() {
+        // Standard-Konstruktor für JPA
     }
-    
+
+    public PaymentRecord(Long termId, Long userId, boolean paid) {
+        this.termId = termId;
+        this.userId = userId;
+        this.paid = paid;
+    }
+
+
     // getters
     public Long getId() {
       return id;
