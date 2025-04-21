@@ -50,6 +50,7 @@ Micronaut allows us to use reactive programming, which helps our services respon
 - Prepared initial `README.md` with team information and service details.
 - Implemented Controller and Entity Class for each service.
 - Developed initial REST endpoints for basic operations (e.g., "Hello from AccountingService").
+- Added DB Models and syssem operations.
 
 ## How to Build and Run
 1. **Clone the repository**
