@@ -58,8 +58,8 @@
 <td>Sync</td>
 <td>Direkte Abfrage für Information</td>
 <td>Event nicht gefunden</td>
-<td>Thin</td>
-<td>Dedicated</td>
+<td></td>
+<td></td>
 </tr>
 <tr class="even">
 <td>Boolean assignCaregiver(String termId, string caregiverId)</td>
@@ -107,24 +107,24 @@
 <td>Sync</td>
 <td>Direkte Abfrage für Information</td>
 <td>Term nicht gefunden</td>
-<td>Thin</td>
-<td>Dedicated</td>
+<td></td>
+<td></td>
 </tr>
 <tr class="even">
 <td>Payment[] getOpenPayments(String termId)</td>
 <td>Sync</td>
 <td>Direkte Abfrage</td>
 <td>Term nicht gefunden</td>
-<td>Thin</td>
-<td>Dedicated</td>
+<td></td>
+<td></td>
 </tr>
 <tr class="odd">
 <td>Payment[] getOpenPayments(String userId)</td>
 <td>Sync</td>
 <td>Direkte Abfrage</td>
 <td>User nicht gefunden</td>
-<td>Thin</td>
-<td>Dedicated</td>
+<td></td>
+<td></td>
 </tr>
 <tr class="even">
 <td>Payment createUserPayment(String termId, String userId, PaymentData
@@ -159,8 +159,8 @@ termId)</td>
 <td>Sync</td>
 <td>Direkte Abfrage</td>
 <td>User/Term nicht gefunden</td>
-<td>Thin</td>
-<td>Dedicated</td>
+<td></td>
+<td></td>
 </tr>
 <tr class="even">
 <td>Boolean updatePaymentStatus(String termId, String userId,
@@ -276,16 +276,16 @@ careGiverId);</p>
 <tr class="even">
 <td>Methoden Signaturen</td>
 <td><p>public List&lt;Payment&gt; getPayments(String termId);</p>
-<p>2public List&lt;Payment&gt; getOpenPayments(String termId);</p>
-<p>3public List&lt;Payment&gt; getOpenPayments(String userId);</p>
-<p>4public Payment createUser Payment(String termId, String userId);</p>
-<p>5public void notifyUser PaymentReceived(String userId, String
+<p>public List&lt;Payment&gt; getOpenPayments(String termId);</p>
+<p>public List&lt;Payment&gt; getOpenPayments(String userId);</p>
+<p>public Payment createUser Payment(String termId, String userId);</p>
+<p>public void notifyUser PaymentReceived(String userId, String
 termId);</p>
-<p>6public void notifyUser PaymentPending(String userId, String termId,
+<p>public void notifyUser PaymentPending(String userId, String termId,
 double price, String paymentDeadline);</p>
-<p>7public PaymentStatus getUser PaymentStatusForTerm(String userId,
+<p>public PaymentStatus getUser PaymentStatusForTerm(String userId,
 String termId);</p>
-<p>8public boolean updatePaymentStatus(String termId, String userId,
+<p>public boolean updatePaymentStatus(String termId, String userId,
 PaymentStatus status);</p></td>
 </tr>
 </tbody>
