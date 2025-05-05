@@ -3,28 +3,38 @@ package at.fhv.model;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Serdeable
 @Entity
 @Table(name = "payment_records")
-public class PaymentRecord {
+public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;     
-    private Long termId;     
+    private String paymentId;
+    private Long termId;
+    private Long userId;
+    private double amount;
+    private PaymentStatus status;
+    private LocalDate paymentDate;
+    private LocalDate paymentDeadline;
 
-    private boolean paid;
 
-    public PaymentRecord() {
+    public Payment() {
         // Standard-Konstruktor für JPA
     }
 
-    public PaymentRecord(Long termId, Long userId, boolean paid) {
+    public Payment(Long termId, Long userId, double amount, LocalDate paymentDate, LocalDate paymentDeadline, boolean paid) {
         this.termId = termId;
         this.userId = userId;
-        this.paid = paid;
+        this.amount = amount;
+        this.paymentDate = paymentDate;
+        this.paymentDeadline = paymentDeadline;
+        this.paymentId = termId + "-" + userId;
+        this.status = paid ? PaymentStatus.PAID : PaymentStatus.OPEN;
     }
 
 
@@ -41,10 +51,6 @@ public class PaymentRecord {
       return termId;
     }
 
-    public boolean getPaid() {
-      return paid;
-    }
-
     // setters
     public void setId(Long id) {
       this.id = id;
@@ -57,10 +63,4 @@ public class PaymentRecord {
     public void setTermId(Long termId) {
       this.termId = termId;
     }
-
-    public void setPaid(boolean paid) {
-      this.paid = paid;
-    }
-
-
 }
