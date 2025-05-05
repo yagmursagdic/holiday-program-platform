@@ -1,45 +1,71 @@
-
 services:
-  db:
-    image: postgres:latest
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_PASSWORD: postgres
-    volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
+  # teams can add their service definitions here
+#  some-service:
+#    image: holidayplanner/accounting-service:latest
+#    ports:
+#      - "8081:8080"
+#    volumes:
+#      - ./application-accounting.yml:/application-dev.yml
+#    environment:
+#      MICRONAUT_CONFIG_FILES: /application-dev.yml
+  
+# we add our service images here
+  # db image
+  #db:
+  #  image: postgres:latest
+  #  ports:
+  #    - "5432:5432"
+  #  environment:
+  #    POSTGRES_PASSWORD: postgres
+  #  volumes:
+  #    - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  #  healthcheck:
+  #    test: ["CMD", "pg_isready", "-U", "postgres"]
+  #    interval: 10s
+  #    timeout: 5s
+  #    retries: 5
+
+  # accounting-service 
   accounting-service:
-    build:
-      context: ./AccountingService/accountingservice
+    image: stark5200/accounting-service:latest
     ports:
       - "8081:8081"
+    # we are using 8081:8081 but in the template it's 8081:8080, not sure which is better option
     depends_on:
-      db:
-        condition: service_healthy
+    #  db:
+    #    condition: service_healthy
+      kafka:
+        condition: service_started
     environment:
+      MICRONAUT_CONFIG_FILES: /application-dev.yml
       DATABASE_URL: jdbc:postgresql://db:5432/accounting_db
       DATABASE_USERNAME: accountinguser
       DATABASE_PASSWORD: accountingUser_pw_geheim
+    volumes:
+      - ./application-accounting.yml:/application-dev.yml
 
+  # term-service
   term-service:
-    build:
-      context: ./TermService/termservice
+    image: stark5200/term-service:latest
     ports:
       - "8082:8082"
     depends_on:
-      db:
-        condition: service_healthy
+    #  db:
+    #    condition: service_healthy
+      kafka:
+        condition: service_started
     environment:
+      MICRONAUT_CONFIG_FILES: /application-dev.yml
       DATABASE_URL: jdbc:postgresql://db:5432/term_db
       DATABASE_USERNAME: termuser
       DATABASE_PASSWORD: termUser_pw_geheim
+    volumes:
+      - ./application-term.yml:/application-dev.yml
 
+    # rest of file is same as template
+
+  # A single node kafka cluster using kraft instead of zookeeper
   kafka:
     image: bitnami/kafka:3.9.0
     volumes:
@@ -101,3 +127,4 @@ services:
     profiles:
       - kafka
       - default
+

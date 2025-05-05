@@ -22,4 +22,7 @@ jpa:
 
 kafka:
   bootstrap:
-    servers: localhost:9092
+    servers: kafka:29092
+  producer:
+    value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    key-serializer: org.apache.kafka.common.serialization.StringSerializer

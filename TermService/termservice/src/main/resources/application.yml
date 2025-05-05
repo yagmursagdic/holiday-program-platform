@@ -22,4 +22,4 @@ jpa:
 
 kafka:
   bootstrap:
-    servers: localhost:9092
+    servers: kafka:29092
