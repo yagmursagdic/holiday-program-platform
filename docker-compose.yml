@@ -40,6 +40,12 @@ services:
       DATABASE_USERNAME: termuser
       DATABASE_PASSWORD: termUser_pw_geheim
 
+  composite-service:
+    build:
+      context: ./composite-service
+    ports:
+      - "8082:8083"
+
   kafka:
     image: bitnami/kafka:3.9.0
     volumes:

@@ -1,0 +1,41 @@
+micronaut:
+  application:
+    name: booking
+
+server:
+  port: 8082
+
+datasources:
+  default:
+    url: jdbc:postgresql://localhost:5432/bookingdb
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+    dialect: POSTGRES
+
+jpa:
+  default:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+
+kafka:
+  bootstrap:
+    servers: "localhost:9092"
+
+flyway:
+  datasources:
+    default:
+      enabled: true
+
+# if application.properties
+# #Sun May 18 03:57:43 CEST 2025
+# micronaut.application.name=booking
+# datasources.default.db-type=postgres
+# datasources.default.url=jdbc:postgresql://localhost:5432/bookingdb
+# datasources.default.username=postgres
+# datasources.default.password=postgres
+# datasources.default.driver-class-name=org.postgresql.Driver
+# kafka.bootstrap.servers=localhost:9092
+# flyway.datasources.default.enabled=true
