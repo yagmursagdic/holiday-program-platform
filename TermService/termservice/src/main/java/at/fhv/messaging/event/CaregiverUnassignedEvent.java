@@ -5,5 +5,5 @@ import io.micronaut.serde.annotation.Serdeable;
 @Serdeable
 
 public record CaregiverUnassignedEvent(
-        String termId
-) {}
+        String termId,
+        String caregiverId) {}

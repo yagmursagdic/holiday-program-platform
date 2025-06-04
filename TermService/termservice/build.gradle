@@ -1,4 +1,5 @@
 plugins {
+    id "java"
     id("io.micronaut.application") version "4.5.3"
     id("com.gradleup.shadow") version "8.3.6"
     id("io.micronaut.test-resources") version "4.5.3"
@@ -27,21 +28,29 @@ dependencies {
     runtimeOnly("org.yaml:snakeyaml")
     testImplementation("io.micronaut:micronaut-http-client")
     testImplementation("io.micronaut.test:micronaut-test-junit5")  // Micronaut testing support
-    testImplementation("org.mockito:mockito-core:4.0.0")  // Mockito for mocking
-    testImplementation("org.mockito:mockito-inline:4.0.0")  // For mocking final and static methods
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")  // JUnit5
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    testImplementation("io.micronaut.data:micronaut-data-hibernate-jpa")  // Hibernate for testing
+    testRuntimeOnly("com.h2database:h2")  // H2 database for testing
+    testImplementation("org.mockito:mockito-core:4.8.0")  // Updated Mockito for mocking
+    testImplementation("org.mockito:mockito-inline:4.8.0")  // For mocking final and static methods
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")  // Updated JUnit5
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.0")
 }
 
+test {
+    useJUnitPlatform()
+}
 
 application {
     mainClass = "at.fhv.Application"
 }
-java {
-    sourceCompatibility = JavaVersion.toVersion("21")
-    targetCompatibility = JavaVersion.toVersion("21")
-}
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
 
 graalvmNative.toolchainDetection = false
 
@@ -53,11 +62,9 @@ micronaut {
         annotations("at.fhv.*")
     }
     testResources {
-        sharedServer = true
+        enabled = false
     }
     aot {
-        // Please review carefully the optimizations enabled below
-        // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
         optimizeServiceLoading = false
         convertYamlToJava = false
         precomputeOperations = true
@@ -68,5 +75,3 @@ micronaut {
         replaceLogbackXml = true
     }
 }
-
-
