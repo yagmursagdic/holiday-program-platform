@@ -6,7 +6,7 @@ import at.fhv.messaging.event.PaymentDeletedEvent;
 import at.fhv.messaging.event.PaymentReceivedEvent;
 import at.fhv.messaging.event.PaymentStatusUpdatedEvent;
 import at.fhv.model.Expense;
-import at.fhv.model.Payment;
+import at.fhv.model.PaymentStatus;
 import at.fhv.model.SponsorPayment;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
@@ -36,7 +36,7 @@ public class AccountingController {
 
     // 2. Get open payments for a term
     @Get("/payments/open/term/{termId}")
-    public List<String> getOpenPaymentsByTerm(Long termId) {
+    public List<String> getOpenPaymentsByTerm(String termId) {
         return List.of("OpenPayment1 for term " + termId, "OpenPayment2 for term " + termId);
     }
 
@@ -78,8 +78,8 @@ public class AccountingController {
     // 6. Notify user payment pending
     @Post("/payment/notify/pending")
     public String notifyUserPaymentPending(@Body Map<String, Object> body) {
-        Long userId = ((Number) body.get("userId")).longValue();
-        Long termId = ((Number) body.get("termId")).longValue();
+        String userId = body.get("userId").toString();
+        String termId = body.get("termId").toString();
         Double price = ((Number) body.get("price")).doubleValue();
         String paymentDeadline = (String) body.get("paymentDeadline");
         return "User " + userId + " notified: payment pending (" + price + "€) until " + paymentDeadline + " for term " + termId;
@@ -87,7 +87,7 @@ public class AccountingController {
 
     // 7. Get user payment status for a term
     @Get("/payment/status/{userId}/{termId}")
-    public List<String> getUserPaymentStatusForTerm(Long userId, Long termId) {
+    public List<String> getUserPaymentStatusForTerm(String userId, String termId) {
         return List.of("PaymentStatus1 for user " + userId + " and term " + termId);
     }
 
@@ -115,7 +115,7 @@ public class AccountingController {
     @Get("/sponsor/payments")
     public List<SponsorPayment> getSponsorPayments() {
         List<SponsorPayment> sponsorPayments = new ArrayList<>();
-        SponsorPayment sponsorPayment = new SponsorPayment(1L, 500.0, false);
+        SponsorPayment sponsorPayment = new SponsorPayment("1", 500.0, PaymentStatus.PENDING);
         sponsorPayments.add(sponsorPayment);
         return sponsorPayments;
     }
@@ -123,9 +123,9 @@ public class AccountingController {
     // 10. Create sponsor payment
     @Post("/sponsor/payment/create")
     public SponsorPayment createSponsorPayment(@Body Map<String, Object> body) {
-        Long sponsorId = ((Number) body.get("sponsorId")).longValue();
+        String sponsorId = body.get("sponsorId").toString();
         Double amount = ((Number) body.get("amount")).doubleValue();
-        return new SponsorPayment(sponsorId, amount, false);
+        return new SponsorPayment(sponsorId, amount, PaymentStatus.PENDING);
     }
 
     // 11. Create expense

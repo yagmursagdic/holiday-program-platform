@@ -2,6 +2,7 @@ package at.fhv.model;
 
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
+import java.util.Objects;
 
 @Serdeable
 @Entity
@@ -10,36 +11,45 @@ public class SponsorPayment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String sponsorPaymentId;
 
-    private Long sponsorId;
+    private String sponsorId;
+
+    private String organizationId;
 
     private Double amount;
 
-    private boolean paid;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
 
     public SponsorPayment() {
-        // Standard-Konstruktor für JPA
+        // Standard-Constructor for JPA
     }
 
-    public SponsorPayment(Long sponsorId, Double amount, boolean paid) {
+    public SponsorPayment(String sponsorId, Double amount, PaymentStatus paymentStatus) {
         this.sponsorId = sponsorId;
         this.amount = amount;
-        this.paid = paid;
+        this.paymentStatus = paymentStatus;
     }
 
-    // Getter und Setter (wichtig für Micronaut/JPA)
-
-    public Long getId() {
-        return id;
+    public String getSponsorPaymentId() {
+        return sponsorPaymentId;
     }
 
-    public Long getSponsorId() {
+    public String getSponsorId() {
         return sponsorId;
     }
 
-    public void setSponsorId(Long sponsorId) {
+    public void setSponsorId(String sponsorId) {
         this.sponsorId = sponsorId;
+    }
+
+    public String getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
     }
 
     public Double getAmount() {
@@ -50,12 +60,35 @@ public class SponsorPayment {
         this.amount = amount;
     }
 
-    public boolean isPaid() {
-        return paid;
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
     }
 
-    public void setPaid(boolean paid) {
-        this.paid = paid;
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SponsorPayment)) return false;
+        SponsorPayment that = (SponsorPayment) o;
+        return Objects.equals(sponsorPaymentId, that.sponsorPaymentId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sponsorPaymentId);
+    }
+
+    @Override
+    public String toString() {
+        return "SponsorPayment{" +
+                "sponsorPaymentId=" + sponsorPaymentId +
+                ", sponsorId=" + sponsorId +
+                ", organizationId=" + organizationId +
+                ", amount=" + amount +
+                ", paymentStatus=" + paymentStatus +
+                '}';
     }
 }
-
