@@ -39,8 +39,8 @@ public class TermController {
                 new TermCreatedEvent(
                         createdTerm.getTermId(),
                         createdTerm.getEventId(),
-                        createdTerm.getStartTime().toLocalDate(),
-                        createdTerm.getStartTime().toLocalTime(),
+                        createdTerm.getStartTime(),
+                        createdTerm.getEndTime(),
                         createdTerm.getLocation(),
                         createdTerm.getMeetingPoint(),
                         createdTerm.getMinParticipants(),
@@ -72,8 +72,9 @@ public class TermController {
                     term.getTermId(),
                     new TermUpdatedEvent(
                             term.getTermId(),
-                            term.getStartTime().toLocalDate(),
-                            term.getStartTime().toLocalTime(),
+                            term.getEventId(),
+                            term.getStartTime(),
+                            term.getEndTime(),
                             term.getLocation(),
                             term.getMeetingPoint(),
                             term.getMinParticipants(),
@@ -81,7 +82,7 @@ public class TermController {
                             term.getPrice(),
                             term.getCaregiverIds()));
 
-            return HttpResponse.ok("Term " + term.getTermId().toString() + " updated and event sent");
+            return HttpResponse.ok("Term " + term.getTermId() + " updated and event sent");
         } else {
             return HttpResponse.notFound();
         }

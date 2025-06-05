@@ -2,16 +2,15 @@ package at.fhv.messaging.event;
 
 import io.micronaut.serde.annotation.Serdeable;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Serdeable
 public record TermCreatedEvent(
         String termId,
         String eventId,
-        LocalDate date,
-        LocalTime time,
+        LocalDateTime startTime,
+        LocalDateTime endTime,
         String location,
         String meetingPoint,
         int minParticipants,
