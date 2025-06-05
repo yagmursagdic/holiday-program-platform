@@ -1,6 +1,10 @@
 package at.fhv.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,17 +19,24 @@ public class Term {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String termId;
 
+    @NotNull("eventId must not be null")
     private String eventId;
 
+    @NotNull
     private LocalDateTime startTime;
+
+    @NotNull
     private LocalDateTime endTime;
 
+    @NotBlank
     private String location;
     private String meetingPoint;
 
+    @Min(value = 1, message = "minParticipants must be at least 1")
     private int minParticipants;
     private int maxParticipants;
 
+    @DecimalMin(value =  "0.0")
     private double price;
 
     @ElementCollection
