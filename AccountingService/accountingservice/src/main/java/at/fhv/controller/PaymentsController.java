@@ -1,31 +1,59 @@
 package at.fhv.controller;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import at.fhv.messaging.AccountingEventProducer;
 import at.fhv.messaging.event.PaymentCreatedEvent;
 import at.fhv.messaging.event.PaymentDeletedEvent;
 import at.fhv.messaging.event.PaymentReceivedEvent;
 import at.fhv.messaging.event.PaymentStatusUpdatedEvent;
 import at.fhv.model.Expense;
+import at.fhv.model.Payment;
 import at.fhv.model.PaymentStatus;
 import at.fhv.model.SponsorPayment;
+import at.fhv.service.AccountingCommandService;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.annotation.*;
+import io.micronaut.http.annotation.Body;
+import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Delete;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Post;
 import jakarta.inject.Inject;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+@Controller("/accounting/payments")
+public class PaymentsController {
 
-@Controller("/accounting")
-public class AccountingController {
+    @Inject
+    AccountingCommandService accountingCommandService:
 
+    @Inject
+    AccountingQueryService accountingQueryService;
+  
     @Inject
     AccountingEventProducer producer;
 
     @Get("/hello")
     public String hello() {
-        return "Hello from AccountingService";
+      return "Hello from AccountingService, this is the payments part";
+    }
+  
+    // 0. Create payment 
+    
+    @Post("/create")
+    public HttpResponse<?> createPayment(@Body Payment payment) {
+      Payment createdPayment = AccountingCommandService.createPayment(payment);
+      
+      producer.sendPaymentCreated(
+          createdPayment.getPaymentId(),
+          new PaymentCreatedEvent(
+              createdPayment.getPaymentId(), 
+              createdPayment.getTermId(),
+              createdPayment.getUserId(), 
+              createdPayment.get
+          ))
     }
 
     // 1. Get all payments for a term

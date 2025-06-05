@@ -1,6 +1,5 @@
 package at.fhv.messaging;
 
-
 import at.fhv.messaging.event.PaymentCreatedEvent;
 import at.fhv.messaging.event.PaymentDeletedEvent;
 import at.fhv.messaging.event.PaymentReceivedEvent;

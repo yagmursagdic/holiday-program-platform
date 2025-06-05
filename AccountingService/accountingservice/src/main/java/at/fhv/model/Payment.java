@@ -1,16 +1,23 @@
 package at.fhv.model;
 
-import io.micronaut.serde.annotation.Serdeable;
-import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.util.Objects;
+
+import io.micronaut.serde.annotation.Serdeable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Serdeable
 @Entity
 @Table(name = "payment_records")
 public class Payment {
 
+    //UUID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String paymentId;
