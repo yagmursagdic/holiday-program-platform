@@ -15,6 +15,9 @@ repositories {
 dependencies {
     annotationProcessor("io.micronaut:micronaut-http-validation")
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    annotationProcessor("io.micronaut.openapi:micronaut-openapi")
+    implementation("io.micronaut.openapi:micronaut-openapi-annotations")
+    implementation("io.swagger.core.v3:swagger-annotations")
     implementation("io.micronaut.kafka:micronaut-kafka")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     implementation("io.micronaut:micronaut-jackson-databind")
@@ -38,10 +41,14 @@ application {
     mainClass = "at.fhv.Application"
 }
 java {
-    sourceCompatibility = JavaVersion.toVersion("21")
-    targetCompatibility = JavaVersion.toVersion("21")
+    sourceCompatibility = JavaVersion.toVersion("17")
+    targetCompatibility = JavaVersion.toVersion("17")
 }
 
+tasks.withType(JavaCompile) {
+    options.fork = true
+    options.forkOptions.jvmArgs << '-Dmicronaut.openapi.views.spec=rapidoc.enabled=true,swagger-ui.enabled=true,swagger-ui.theme=flattop'
+}
 
 graalvmNative.toolchainDetection = false
 
@@ -53,7 +60,7 @@ micronaut {
         annotations("at.fhv.*")
     }
     testResources {
-        sharedServer = true
+        enabled = false
     }
     aot {
         // Please review carefully the optimizations enabled below
