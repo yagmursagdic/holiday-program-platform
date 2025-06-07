@@ -11,10 +11,8 @@ import at.fhv.messaging.event.PaymentDeletedEvent;
 import at.fhv.messaging.event.PaymentReceivedEvent;
 import at.fhv.messaging.event.PaymentStatusUpdatedEvent;
 import at.fhv.model.Expense;
-import at.fhv.model.Payment;
 import at.fhv.model.PaymentStatus;
 import at.fhv.model.SponsorPayment;
-import at.fhv.service.AccountingCommandService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -23,15 +21,9 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import jakarta.inject.Inject;
 
-@Controller("/accounting/payments")
-public class PaymentsController {
+@Controller("/accounting/sponsors")
+public class SponsorController {
 
-    @Inject
-    AccountingCommandService accountingCommandService:
-
-    @Inject
-    AccountingQueryService accountingQueryService;
-  
     @Inject
     AccountingEventProducer producer;
 
@@ -44,16 +36,7 @@ public class PaymentsController {
     
     @Post("/create")
     public HttpResponse<?> createPayment(@Body Payment payment) {
-      Payment createdPayment = AccountingCommandService.createPayment(payment);
       
-      producer.sendPaymentCreated(
-          createdPayment.getPaymentId(),
-          new PaymentCreatedEvent(
-              createdPayment.getPaymentId(), 
-              createdPayment.getTermId(),
-              createdPayment.getUserId(), 
-              createdPayment.get
-          ))
     }
 
     // 1. Get all payments for a term

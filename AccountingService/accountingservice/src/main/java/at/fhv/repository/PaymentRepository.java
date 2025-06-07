@@ -9,7 +9,7 @@ import io.micronaut.data.repository.CrudRepository;
 @Repository
 public interface PaymentRepository extends CrudRepository<Payment, String> {
 
-  List<Payment> findByPaymentId(String paymentId);
+  List<Payment> findByTermId(String termId);
 
     // Keine zusätzlichen Methoden nötig für den aktuellen Service
 

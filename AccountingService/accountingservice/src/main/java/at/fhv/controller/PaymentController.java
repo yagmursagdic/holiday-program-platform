@@ -6,24 +6,26 @@ import java.util.List;
 import java.util.Map;
 
 import at.fhv.messaging.AccountingEventProducer;
-import at.fhv.messaging.event.PaymentCreatedEvent;
-import at.fhv.messaging.event.PaymentDeletedEvent;
-import at.fhv.messaging.event.PaymentReceivedEvent;
-import at.fhv.messaging.event.PaymentStatusUpdatedEvent;
+import at.fhv.messaging.event.*;
 import at.fhv.model.Expense;
+import at.fhv.model.Payment;
 import at.fhv.model.PaymentStatus;
 import at.fhv.model.SponsorPayment;
+import at.fhv.service.AccountingCommandService;
+import at.fhv.service.AccountingQueryService;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.annotation.Body;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Delete;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.*;
 import jakarta.inject.Inject;
 
-@Controller("/accounting/sponsors")
-public class SponsorsController {
+@Controller("/accounting/payments")
+public class PaymentController {
 
+    @Inject
+    AccountingCommandService accountingCommandService;
+
+    @Inject
+    AccountingQueryService accountingQueryService;
+  
     @Inject
     AccountingEventProducer producer;
 
@@ -32,15 +34,30 @@ public class SponsorsController {
       return "Hello from AccountingService, this is the payments part";
     }
   
-    // 0. Create payment 
     
+    // Create payment 
     @Post("/create")
     public HttpResponse<?> createPayment(@Body Payment payment) {
+      Payment createdPayment = accountingCommandService.createPayment(payment);
       
+      producer.sendPaymentCreated(
+        createdPayment.getPaymentId(),
+        new PaymentCreatedEvent(
+          createdPayment.getPaymentId(), 
+          createdPayment.getUserId(), 
+          createdPayment.getTermId(),
+          createdPayment.getAmount(), 
+          createdPayment.getPaymentDate(), 
+          createdPayment.getPaymentDeadline(), 
+          createdPayment.getPaymentStatus()
+        )
+      );
+
+      return HttpResponse.ok("Payment: " + createdPayment.getPaymentId() + " created and event sent."); 
     }
 
     // 1. Get all payments for a term
-    @Get("/payments/{termId}")
+    @Get("/{termId}")
     public List<String> getPayments(String termId) {
         return List.of("Payment1 for term " + termId, "Payment2 for term " + termId);
     }

@@ -20,15 +20,15 @@ public class Payment {
     //UUID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String paymentId;
-    private String termId;
     private String userId;
+    private String termId;
+    private String paymentId;
     private double amount;
 
     @Enumerated(EnumType.STRING)
-    private PaymentStatus status;
     private LocalDate paymentDate;
     private LocalDate paymentDeadline;
+    private PaymentStatus status;
 
 
     public Payment() {
@@ -36,13 +36,13 @@ public class Payment {
     }
 
     public Payment(String termId, String userId, double amount, LocalDate paymentDate, LocalDate paymentDeadline, boolean paid) {
-        this.termId = termId;
         this.userId = userId;
+        this.termId = termId;
+        this.paymentId = termId  + userId;
         this.amount = amount;
         this.paymentDate = paymentDate;
         this.paymentDeadline = paymentDeadline;
-        this.paymentId = termId  + userId;
-        this.status = paid ? PaymentStatus.PAID : PaymentStatus.PENDING;
+        this.status = (paid ? PaymentStatus.PAID : PaymentStatus.PENDING);
     }
 
 
@@ -59,18 +59,51 @@ public class Payment {
       return termId;
     }
 
+    public double getAmount() {
+      return amount;
+    }
+
+    public LocalDate getPaymentDate() {
+      return paymentDate;
+    }
+    
+    public LocalDate getPaymentDeadline() {
+      return paymentDeadline;
+    }
+
+    public PaymentStatus getPaymentStatus() {
+      return status;
+    }
+
     // setters
     public void setPaymentId(String paymentId) {
       this.paymentId = paymentId;
     }
-
+    
     public void setUserId(String userId) {
       this.userId = userId;
     }
-
+    
     public void setTermId(String termId) {
       this.termId = termId;
     }
+
+    public void setAmount(double amount) {
+      this.amount = amount;
+    }
+
+    public void setPaymentDate(LocalDate paymentDate) {
+      this.paymentDate = paymentDate;
+    }
+    
+    public void setPaymentDeadline(LocalDate paymentDeadline) {
+      this.paymentDeadline = paymentDeadline;
+    }
+
+    public void setPaymentStatus(boolean paid) {
+      this.status = (paid ? PaymentStatus.PAID : PaymentStatus.PENDING);
+    }
+
 
     // equals and hashCode based on paymentId
     @Override
