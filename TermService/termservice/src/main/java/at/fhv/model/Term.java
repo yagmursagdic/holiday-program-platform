@@ -1,5 +1,6 @@
 package at.fhv.model;
 
+import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+@Serdeable
 @Entity
 @Table(name = "terms")
 public class Term {
