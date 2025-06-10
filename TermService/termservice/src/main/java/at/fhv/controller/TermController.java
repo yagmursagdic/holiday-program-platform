@@ -28,12 +28,8 @@ public class TermController {
         this.termQueryService = termQueryService;
     }
 
-    @Get("/hello")
-    public String hello() {
-        return "Hello from TermService";
-    }
-
-    @Post("/")
+    // Create term
+    @Post()
     public HttpResponse<?> createTerm(@Body @Valid Term term) {
         try {
             Term createdTerm = termCommandService.createTerm(term);
@@ -44,36 +40,47 @@ public class TermController {
         }
     }
 
+    // Get term by Id
     @Get("/{termId}")
     public HttpResponse<?> getTerm(@PathVariable String termId) {
         try {
             Optional<Term> term = termQueryService.getTermById(termId);
-            return term.map(HttpResponse::ok)
-                    .orElseGet(HttpResponse::notFound);
+            return term.map(t -> HttpResponse.ok(Map.of(
+                            "message", "Term found",
+                            "term", t)))
+                    .orElseGet(() -> HttpResponse.notFound(Map.of(
+                            "message", "Term not found")));
         } catch (Exception e) {
             LOG.error("Error retrieving term with ID {}", termId, e);
             return HttpResponse.serverError("Error retrieving term.");
         }
     }
 
+    // All terms for an event
     @Get("/by-event/{eventId}")
     public HttpResponse<?> getAllTermsByEventId(@PathVariable String eventId) {
         try {
             List<Term> terms = termQueryService.getAllTermsByEventId(eventId);
-            return HttpResponse.ok(terms);
+            return HttpResponse.ok(Map.of(
+                    "message", "Terms found",
+                    "terms", terms));
         } catch (Exception e) {
             LOG.error("Error retrieving terms for event ID {}", eventId, e);
             return HttpResponse.serverError("Error retrieving terms.");
         }
     }
 
+    // Update term
     @Put("/{termId}")
     public HttpResponse<?> updateTerm(@PathVariable String termId, @Body @Valid Term updatedTerm) {
         try {
             Optional<Term> updated = termCommandService.updateTerm(termId, updatedTerm);
             return updated
-                    .map(HttpResponse::ok)
-                    .orElseGet(HttpResponse::notFound);
+                    .map(t -> HttpResponse.ok(Map.of(
+                            "message", "Term updated",
+                            "term", t)))
+                    .orElseGet(() -> HttpResponse.notFound(Map.of(
+                            "message", "Term not found")));
         } catch (Exception e) {
             LOG.error("Error updating term with ID {}", termId, e);
             return HttpResponse.serverError("Could not update term.");
@@ -83,9 +90,10 @@ public class TermController {
     @Delete("/{termId}")
     public HttpResponse<?> deleteTerm(@PathVariable String termId) {
         try {
-
             termCommandService.deleteTerm(termId);
-            return HttpResponse.ok(termId);
+            return HttpResponse.ok(Map.of(
+                    "message", "Term deleted",
+                    "term", termId));
         } catch (Exception e) {
             LOG.error("Error deleting term with ID {}", termId, e);
             return HttpResponse.serverError("Could not delete term.");

@@ -103,8 +103,6 @@ public class TermCommandService {
             termRepository.update(term);
 
             producer.sendCaregiverAssigned(termId, new CaregiverAssignedEvent(termId, caregiverId));
-        } catch (TermNotFoundException | DuplicateAssignmentException e) {
-            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Failed to assign caregiver " + caregiverId + " to term " + termId, e);
         }
@@ -120,8 +118,6 @@ public class TermCommandService {
                 termRepository.update(term);
                 producer.sendCaregiverUnassigned(termId, new CaregiverUnassignedEvent(termId, caregiverId));
             }
-        } catch (TermNotFoundException e) {
-            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Failed to unassign caregiver " + caregiverId + " from term " + termId, e);
         }
