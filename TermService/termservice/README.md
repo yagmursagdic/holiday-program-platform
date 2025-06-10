@@ -2,7 +2,7 @@
 
 ## Overview
 
-The **TermService** manages the scheduling and structure of event sessions. Each session (called a *term*) represents a specific occurrence of an event, including date, time, location, participant limits, and assigned caregivers.
+The **TermService** manages scheduled event sessions, called terms. A term represents a specific occurrence of an event and includes details such as date, time, location, participant limits, and assigned caregivers.
 
 ---
 
@@ -16,7 +16,8 @@ The **TermService** manages the scheduling and structure of event sessions. Each
 
 - **Messaging**: Apache Kafka
 
-Micronaut was chosen for its fast startup time, low memory footprint, and modularity. Kafka is used for asynchronous event communication.
+Micronaut is chosen for its fast startup time, low memory footprint, and excellent support for microservice architecture.
+Kafka is used for asynchronous, event-driven communication.
 
 ---
 
@@ -41,14 +42,14 @@ cd termservice
 ## REST API Endpoints
 
 ### Naming Convention 
-- All endpoints use lowercase and kebab-case.
+- All paths use lowercase and kebab-case.
 - Resource identifiers (e.g. termId, eventId) are passed as path parameters.
-- JSON keys use camelCase notation.
+- JSON uses camelCase notation.
 - Base path: /terms
 
 ### Create Term
 
-**POST /terms/create**
+**POST /terms/**
 
 Creates a new event session.
 
@@ -69,11 +70,8 @@ Creates a new event session.
 
 
 **Response:**
-- 200 OK – Term successfully created, event sent
-- 400 Bad Request – Invalid input (e.g., constraint violations)
-
-**Example (cURL)**
-
+- 201 Created – Term successfully created, event sent
+- 500 Internal Server Error – Failed to persist or send event
 
 ---
 
@@ -86,25 +84,26 @@ Retrieves a specific term by ID.
 **Response:**
 - 200 OK – Returns the term
 - 404 Not Found – Term not found
+- 500 Internal Server Error – Retrieval failure
 
 ---
 
 ### Get Terms by Event
 
-**GET /terms/{eventId}**
+**GET /terms/by-event/{eventId}**
 
 Retrieves all terms associated with a specific event.
 
 **Response:**
 
 - 200 OK – Returns a list of terms
-- 404 Not Found – No terms found for this event
+- 500 Internal Server Error – Retrieval failure
 
 
 
 ### Update Term
 
-**PUT /terms/update/{termId}**
+**PUT /terms/{termId}**
 
 Updates an existing term.
 
@@ -113,20 +112,20 @@ Updates an existing term.
 **Response:**
 - 200 OK – Term updated and event sent
 - 404 Not Found – Term not found
-- 400 Bad Request – Invalid input
+- 500 Internal Server Error – Retrieval failure
 
 ---
 
 ### Delete Term
 
-**DELETE /terms/delete/{termId}**
+**DELETE /terms/{termId}**
 
 Deletes a term (only possible if no pending payments exist).
 
 **Response:**
-- 200 OK – Termin gelöscht
-- 400 Bad Request – Löschen nicht möglich
-- 404 Not Found – Termin nicht gefunden
+- 200 OK – Term deleted and event sent
+- 404 Not Found – Term not found
+- 500 Internal Server Error – Retrieval failure
 
 ---
 
@@ -137,9 +136,18 @@ Assigns a caregiver to a term.
 
 Response:
 
+```
+{
+  "termId": "abc123",
+  "caregiverId": "cg001",
+  "status": "assigned"
+}
+```
+
 - 200 OK – Caregiver assigned and event sent
-- 400 Bad Request – Already assigned or invalid caregiver
+- 409 Conflict – Already assigned
 - 404 Not Found – Term not found
+- 500 Internal Server Error – Assignment failed
 
 ---
 
@@ -149,9 +157,17 @@ Response:
 Removes a caregiver from a term.
 
 Response:
+```
+{
+  "termId": "abc123",
+  "caregiverId": "cg001",
+  "status": "unassigned"
+}
+```
 
 - 200 OK – Caregiver removed and event sent
 - 404 Not Found – Term not found
+- 500 Internal Server Error – Unassignment failed
 
 ---
 
@@ -229,14 +245,15 @@ Response:
 
 ## Tests
 
-- Unit tests for the use case assigning caregiver:
-  - Caregiver is successfully assigned
-  - Duplicate assignment throws DuplicateAssignmentException 
-  - Non-existent term throws TermNotFoundException 
-  - Kafka producer is called as expected 
-  - Kafka send failures do not prevent the assignment
+- Unit Tests – TermCommandService
+  - Successfully assigns a caregiver
+  - Duplicate caregiver assignment → throws DuplicateAssignmentException
+  - Non-existent term → throws TermNotFoundException
+  - Kafka producer is invoked as expected
+  - Kafka send exception is handled – exception occurs but logic executes up to that point
 
-- Controller test for assignCaregiver with mocked Kafka producer
+- Controller Test – TermController 
+  - Assigning caregiver to non-existent term → returns HTTP 404 Not Found with appropriate error message
 
 ---
 

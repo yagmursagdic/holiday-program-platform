@@ -33,7 +33,7 @@ public class TermController {
         return "Hello from TermService";
     }
 
-    @Post()
+    @Post("/")
     public HttpResponse<?> createTerm(@Body @Valid Term term) {
         try {
             Term createdTerm = termCommandService.createTerm(term);
