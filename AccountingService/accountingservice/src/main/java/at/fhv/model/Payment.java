@@ -20,9 +20,10 @@ public class Payment {
     //UUID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String paymentId;
+
     private String userId;
     private String termId;
-    private String paymentId;
     private double amount;
 
     @Enumerated(EnumType.STRING)
@@ -35,14 +36,13 @@ public class Payment {
         // Standard-Constructor for JPA
     }
 
-    public Payment(String termId, String userId, double amount, LocalDate paymentDate, LocalDate paymentDeadline, boolean paid) {
+    public Payment(String userId, String termId, double amount, LocalDate paymentDate, LocalDate paymentDeadline, PaymentStatus status) {
         this.userId = userId;
         this.termId = termId;
-        this.paymentId = termId  + userId;
         this.amount = amount;
         this.paymentDate = paymentDate;
         this.paymentDeadline = paymentDeadline;
-        this.status = (paid ? PaymentStatus.PAID : PaymentStatus.PENDING);
+        this.status = status;
     }
 
 
@@ -76,10 +76,6 @@ public class Payment {
     }
 
     // setters
-    public void setPaymentId(String paymentId) {
-      this.paymentId = paymentId;
-    }
-    
     public void setUserId(String userId) {
       this.userId = userId;
     }
@@ -100,8 +96,8 @@ public class Payment {
       this.paymentDeadline = paymentDeadline;
     }
 
-    public void setPaymentStatus(boolean paid) {
-      this.status = (paid ? PaymentStatus.PAID : PaymentStatus.PENDING);
+    public void setPaymentStatus(PaymentStatus status) {
+      this.status = status;
     }
 
 
@@ -109,8 +105,7 @@ public class Payment {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Payment)) return false;
-        Payment payment = (Payment) o;
+        if (!(o instanceof Payment payment)) return false;
         return Objects.equals(paymentId, payment.paymentId);
     }
 

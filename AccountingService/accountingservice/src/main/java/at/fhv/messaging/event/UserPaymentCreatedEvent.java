@@ -6,7 +6,7 @@ import at.fhv.model.PaymentStatus;
 import java.time.LocalDate;
 
 @Serdeable
-public record PaymentCreatedEvent(
+public record UserPaymentCreatedEvent(
   String paymentId,
   String userId,
   String termId,
