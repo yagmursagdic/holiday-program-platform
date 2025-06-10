@@ -14,7 +14,6 @@ import java.util.Objects;
 @Table(name = "terms")
 public class Term {
 
-    //UUID wäre besser
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String termId;
@@ -39,6 +38,7 @@ public class Term {
     @DecimalMin(value =  "0.0")
     private double price;
 
+    // need to know if caregiverIds are String or UUID
     @ElementCollection
     private List<String> caregiverIds;
 
@@ -102,10 +102,6 @@ public class Term {
     }
 
     // Setter
-    public void setId(String termId) {
-        this.termId = termId;
-    }
-
     public void setEventId(String eventId) {
         this.eventId = eventId;
     }
@@ -146,9 +142,8 @@ public class Term {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Term)) return false;
-        Term term = (Term) o;
-        return Objects.equals(termId, term.termId);
+        if (!(o instanceof Term t)) return false;
+        return Objects.equals(termId, t.termId);
     }
 
     @Override
@@ -160,7 +155,7 @@ public class Term {
     @Override
     public String toString() {
         return "Term{" +
-                "id=" + termId +
+                "termId=" + termId +
                 ", eventId='" + eventId + '\'' +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +

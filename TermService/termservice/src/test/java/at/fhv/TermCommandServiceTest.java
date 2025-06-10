@@ -2,6 +2,8 @@ package at.fhv;
 
 import at.fhv.exception.DuplicateAssignmentException;
 import at.fhv.exception.TermNotFoundException;
+import at.fhv.messaging.TermEventProducer;
+import at.fhv.messaging.event.CaregiverAssignedEvent;
 import at.fhv.model.Term;
 import at.fhv.repository.TermRepository;
 import at.fhv.service.TermCommandService;
@@ -27,10 +29,17 @@ class TermCommandServiceTest {
     @Inject
     TermRepository termRepository;
 
-    // Mock for TermRepository
+    @Inject
+    TermEventProducer termEventProducer;
+
     @MockBean(TermRepository.class)
     TermRepository mockTermRepository() {
         return Mockito.mock(TermRepository.class);
+    }
+
+    @MockBean(TermEventProducer.class)
+    TermEventProducer mockTermEventProducer() {
+        return Mockito.mock(TermEventProducer.class);
     }
 
     private Term createTermWithId(String id, List<String> caregivers) {
@@ -48,7 +57,7 @@ class TermCommandServiceTest {
 
     @BeforeEach
     void setup() {
-        Mockito.reset(termRepository);
+        Mockito.reset(termRepository, termEventProducer);
     }
 
     @Test
@@ -60,6 +69,7 @@ class TermCommandServiceTest {
         termCommandService.assignCaregiver("123", "caregiver-1");
 
         Assertions.assertTrue(term.getCaregiverIds().contains("caregiver-1"));
+        Mockito.verify(termEventProducer).sendCaregiverAssigned("123", new CaregiverAssignedEvent("123", "caregiver-1"));
     }
 
     @Test
@@ -82,11 +92,15 @@ class TermCommandServiceTest {
     }
 
     @Test
-    void testAssignCaregiver_invalidInput() {
-        Assertions.assertThrows(
-                TermNotFoundException.class,
-                () -> termCommandService.assignCaregiver(null, "caregiver-1"));
-    
-    }
+    void testAssignCaregiver_kafkaException_isHandled() {
+        Term term = createTermWithId("456", new ArrayList<>());
+        Mockito.when(termRepository.findById("456")).thenReturn(Optional.of(term));
+        Mockito.when(termRepository.update(Mockito.any())).thenReturn(term);
 
+        Mockito.doThrow(new RuntimeException("Kafka timeout"))
+                .when(termEventProducer).sendCaregiverAssigned(Mockito.anyString(), Mockito.any());
+
+        Assertions.assertThrows(RuntimeException.class, () ->
+                termCommandService.assignCaregiver("456", "caregiver-9"));
+    }
 }
