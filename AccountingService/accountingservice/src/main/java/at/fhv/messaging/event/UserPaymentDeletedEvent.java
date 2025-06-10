@@ -3,6 +3,6 @@ package at.fhv.messaging.event;
 import io.micronaut.serde.annotation.Serdeable;
 
 @Serdeable
-public record PaymentDeletedEvent(
+public record UserPaymentDeletedEvent(
         String paymentId
 ) {}

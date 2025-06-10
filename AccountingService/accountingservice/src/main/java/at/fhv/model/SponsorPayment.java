@@ -23,8 +23,7 @@ public class SponsorPayment {
         // Standard-Constructor for JPA
     }
 
-    public SponsorPayment(String sponsorPaymentId, String sponsorId,  String organizationId, Double amount, boolean paid) {
-        this.sponsorPaymentId = sponsorPaymentId;
+    public SponsorPayment(String sponsorId,  String organizationId, Double amount, boolean paid) {
         this.sponsorId = sponsorId;
         this.organizationId = organizationId;
         this.amount = amount;

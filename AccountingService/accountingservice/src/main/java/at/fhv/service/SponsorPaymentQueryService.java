@@ -5,28 +5,28 @@ import java.util.Optional;
 
 import at.fhv.model.Payment;
 import at.fhv.model.SponsorPayment;
-import at.fhv.repository.PaymentRepository;
+import at.fhv.repository.UserPaymentRepository;
 import at.fhv.repository.SponsorPaymentRepository;
 import jakarta.inject.Singleton;
 
 @Singleton
-public class AccountingQueryService {
+public class SponsorPaymentQueryService {
 
-  private PaymentRepository paymentRepository;
-  private SponsorPaymentRepository sponsorPaymentRepository;
+  private final UserPaymentRepository userPaymentRepository;
+  private final SponsorPaymentRepository sponsorPaymentRepository;
 
-  public AccountingQueryService(PaymentRepository paymentRepository,
-      SponsorPaymentRepository sponsorPaymentRepository) {
-    this.paymentRepository = paymentRepository;
+  public SponsorPaymentQueryService(UserPaymentRepository userPaymentRepository,
+                                    SponsorPaymentRepository sponsorPaymentRepository) {
+    this.userPaymentRepository = userPaymentRepository;
     this.sponsorPaymentRepository = sponsorPaymentRepository;
   }
   
   public Optional<Payment> getPaymentById(String id) {
-    return paymentRepository.findById(id);
+    return userPaymentRepository.findById(id);
   }
 
   public List<Payment> getAllPaymentsByTermId(String termtId) {
-    return paymentRepository.findByTermId(termtId);
+    return userPaymentRepository.findByTermId(termtId);
   }
   
   public Optional<SponsorPayment> getSponsorPaymentById(String id) {

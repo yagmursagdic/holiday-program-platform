@@ -1,11 +1,10 @@
 package at.fhv.messaging.event;
 
+import at.fhv.model.PaymentStatus;
 import io.micronaut.serde.annotation.Serdeable;
 
 @Serdeable
-public record PaymentStatusUpdatedEvent(
+public record UserPaymentStatusUpdatedEvent(
         String paymentId,
-        String userId,
-        String termId,
-        String newStatus
+        PaymentStatus newStatus
 ) {}

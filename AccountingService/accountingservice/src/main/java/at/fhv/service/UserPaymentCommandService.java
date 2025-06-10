@@ -2,8 +2,9 @@ package at.fhv.service;
 
 import at.fhv.exception.PaymentNotFoundException;
 import at.fhv.messaging.AccountingEventProducer;
-import at.fhv.messaging.event.PaymentDeletedEvent;
-import at.fhv.messaging.event.PaymentUpdatedEvent;
+import at.fhv.messaging.event.UserPaymentDeletedEvent;
+import at.fhv.messaging.event.UserPaymentStatusUpdatedEvent;
+import at.fhv.messaging.event.UserPaymentUpdatedEvent;
 import at.fhv.messaging.event.UserPaymentCreatedEvent;
 import at.fhv.model.Payment;
 import at.fhv.model.PaymentStatus;
@@ -23,7 +24,7 @@ public class UserPaymentCommandService {
         this.producer = producer;
     }
 
-    public Payment createPayment(Payment payment) {
+    public Payment createUserPayment(Payment payment) {
         try {
             Payment created = userPaymentRepository.save(payment);
 
@@ -45,7 +46,7 @@ public class UserPaymentCommandService {
 
     }
 
-    public Optional<Payment> updatePayment(String userPaymentId, Payment payment) {
+    public Optional<Payment> updateUserPayment(String userPaymentId, Payment payment) {
         try {
             return userPaymentRepository.findById(userPaymentId).map(existing -> {
                 existing.setUserId(payment.getUserId());
@@ -57,7 +58,7 @@ public class UserPaymentCommandService {
 
                 Payment updated = userPaymentRepository.update(existing);
 
-                producer.sendPaymentUpdated(updated.getTermId(), new PaymentUpdatedEvent(
+                producer.sendUserPaymentUpdated(updated.getTermId(), new UserPaymentUpdatedEvent(
                         updated.getUserId(),
                         updated.getTermId(),
                         updated.getAmount(),
@@ -73,10 +74,10 @@ public class UserPaymentCommandService {
         }
     }
 
-    public void deletePayment(String userPaymentId) {
+    public void deleteUserPayment(String userPaymentId) {
         try {
             userPaymentRepository.deleteById(userPaymentId);
-            producer.sendPaymentDeleted(userPaymentId, new PaymentDeletedEvent(userPaymentId));
+            producer.sendUserPaymentDeleted(userPaymentId, new UserPaymentDeletedEvent(userPaymentId));
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete user payment with id: " + userPaymentId, e);
         }
@@ -89,11 +90,13 @@ public class UserPaymentCommandService {
     public void notifyPaymentPending(String userId, String termId, Double price, String paymentDeadline) {
     }
 
-    public boolean markPaymentAsPaid(String paymentId) {
+    public boolean markUserPaymentAsPaid(String paymentId) {
         try{
             Payment payment = userPaymentRepository.findById(paymentId).orElseThrow(() -> new PaymentNotFoundException(paymentId));
             payment.setPaymentStatus(PaymentStatus.PAID);
             userPaymentRepository.update(payment);
+
+            producer.sendUserPaymentStatusUpdated(paymentId, new UserPaymentStatusUpdatedEvent(paymentId, payment.getPaymentStatus()));
             //notify aufrufen
             return true;
         } catch (Exception e) {

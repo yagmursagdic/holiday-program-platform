@@ -8,19 +8,27 @@ import io.micronaut.configuration.kafka.annotation.Topic;
 @KafkaClient
 public interface AccountingEventProducer {
 
-    @Topic("accounting.payments.created")
-    void sendPaymentCreated(@KafkaKey String key, UserPaymentCreatedEvent event);
 
-    @Topic("accounting.payments.statusUpdated")
-    void sendPaymentStatusUpdated(@KafkaKey String key, PaymentStatusUpdatedEvent event);
-
-    @Topic("accounting.payments.deleted")
-    void sendPaymentDeleted(@KafkaKey String key, PaymentDeletedEvent event);
-
-    @Topic("accounting.payments.received")
-    void sendPaymentReceived(@KafkaKey String key, PaymentReceivedEvent event);
-
+    @Topic("accounting.user.payments.created")
     void sendUserPaymentCreated(String paymentId, UserPaymentCreatedEvent userPaymentCreatedEvent);
 
-    void sendPaymentUpdated(String termId, PaymentUpdatedEvent paymentUpdatedEvent);
+    @Topic("accounting.user.payments.statusUpdated")
+    void sendUserPaymentStatusUpdated(@KafkaKey String key, UserPaymentStatusUpdatedEvent event);
+
+    @Topic("accounting.user.payments.updated")
+    void sendUserPaymentUpdated(String termId, UserPaymentUpdatedEvent userPaymentUpdatedEvent);
+
+    @Topic("accounting.user.payments.deleted")
+    void sendUserPaymentDeleted(@KafkaKey String key, UserPaymentDeletedEvent event);
+
+    @Topic("accounting.user.payments.received")
+    void sendPaymentReceived(@KafkaKey String key, UserPaymentReceivedEvent event);
+
+    @Topic("accounting.sponsor.payments.created")
+    void sendSponsorPaymentCreated(String sponsorPaymentId, SponsorPaymentCreatedEvent sponsorPaymentCreatedEvent);
+
+    @Topic("accounting.sponsor.payments.updated")
+    void sendSponsorPaymentUpdated(String sponsorPaymentId, SponsorPaymentUpdatedEvent sponsorPaymentUpdatedEvent);
+
+    void sendSponsorPaymentDeleted(String sponsorPaymentId, SponsorPaymentDeletedEvent sponsorPaymentDeletedEvent);
 }

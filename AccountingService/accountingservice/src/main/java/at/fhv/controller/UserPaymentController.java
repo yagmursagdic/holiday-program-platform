@@ -24,16 +24,11 @@ public class UserPaymentController {
         this.userPaymentQueryService = userPaymentQueryService;
     }
 
-    @Get("/hello")
-    public String hello() {
-        return "Hello from AccountingService, this is the payments part";
-    }
-
     // Create user payment
     @Post()
-    public HttpResponse<?> createPayment(@Body Payment payment) {
+    public HttpResponse<?> createUserPayment(@Body Payment payment) {
         try {
-            Payment createdPayment = userPaymentCommandService.createPayment(payment);
+            Payment createdPayment = userPaymentCommandService.createUserPayment(payment);
             return HttpResponse.ok(createdPayment);
         } catch (Exception e) {
             LOG.error("Failed to create user payment", e);
@@ -43,7 +38,7 @@ public class UserPaymentController {
 
     // Get payment by Id
     @Get("/{userPaymentId}")
-    public HttpResponse<?> getPayment(@PathVariable String userPaymentId) {
+    public HttpResponse<?> getUserPayment(@PathVariable String userPaymentId) {
         try {
             Optional<Payment> payment = userPaymentQueryService.getPaymentById(userPaymentId);
             return payment.map(p -> HttpResponse.ok(Map.of(
@@ -59,7 +54,7 @@ public class UserPaymentController {
 
     // All payments for a term
     @Get("/by-term/{termId}")
-    public HttpResponse<?> getPaymentsByTerm(@PathVariable String termId) {
+    public HttpResponse<?> getUserPaymentsByTerm(@PathVariable String termId) {
         try {
             List<Payment> payments = userPaymentQueryService.getAllPaymentsByTermId(termId);
             return HttpResponse.ok(Map.of(
@@ -73,9 +68,9 @@ public class UserPaymentController {
 
     // Update payment by ID
     @Put("/{userPaymentId}")
-    public HttpResponse<?> updateTerm(@PathVariable String userPaymentId, @Body Payment payment) {
+    public HttpResponse<?> updateUserPayment(@PathVariable String userPaymentId, @Body Payment payment) {
         try {
-            Optional<Payment> updated = userPaymentCommandService.updatePayment(userPaymentId, payment);
+            Optional<Payment> updated = userPaymentCommandService.updateUserPayment(userPaymentId, payment);
             return updated
                     .map(p -> HttpResponse.ok(Map.of(
                             "message", "Payment updated",
@@ -90,9 +85,9 @@ public class UserPaymentController {
 
     // Delete payment by ID
     @Delete("/{userPaymentId}")
-    public HttpResponse<?> deletePayment(String userPaymentId) {
+    public HttpResponse<?> deleteUserPayment(String userPaymentId) {
         try {
-            userPaymentCommandService.deletePayment(userPaymentId);
+            userPaymentCommandService.deleteUserPayment(userPaymentId);
             return HttpResponse.ok(Map.of(
                     "message", "Payment deleted",
                     "payment", userPaymentId));
@@ -164,10 +159,10 @@ public class UserPaymentController {
 
     // Mark payment as paid
     @Post("/mark-paid/{paymentId}")
-    public HttpResponse<?> markAsPaid(@PathVariable String paymentId) {
+    public HttpResponse<?> markUserPaymentAsPaid(@PathVariable String paymentId) {
         try {
 
-            boolean updated = userPaymentCommandService.markPaymentAsPaid(paymentId);
+            boolean updated = userPaymentCommandService.markUserPaymentAsPaid(paymentId);
 
             if (!updated) {
                 return HttpResponse.notFound(Map.of("message", "Payment not found or could not be updated"));
