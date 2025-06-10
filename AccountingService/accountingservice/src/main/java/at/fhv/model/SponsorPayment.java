@@ -12,11 +12,8 @@ public class SponsorPayment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String sponsorPaymentId;
-
     private String sponsorId;
-
     private String organizationId;
-
     private Double amount;
 
     @Enumerated(EnumType.STRING)
@@ -26,54 +23,62 @@ public class SponsorPayment {
         // Standard-Constructor for JPA
     }
 
-    public SponsorPayment(String sponsorId, Double amount, PaymentStatus paymentStatus) {
+    public SponsorPayment(String sponsorPaymentId, String sponsorId,  String organizationId, Double amount, boolean paid) {
+        this.sponsorPaymentId = sponsorPaymentId;
         this.sponsorId = sponsorId;
+        this.organizationId = organizationId;
         this.amount = amount;
-        this.paymentStatus = paymentStatus;
+        this.paymentStatus = (paid ? PaymentStatus.PAID : PaymentStatus.PENDING);
     }
 
+    // getters
     public String getSponsorPaymentId() {
         return sponsorPaymentId;
     }
 
     public String getSponsorId() {
-        return sponsorId;
+      return sponsorId;
+    }
+    
+    public String getOrganizationId() {
+      return organizationId;
+    }
+    
+    public Double getAmount() {
+      return amount;
+    }
+    
+    public PaymentStatus getPaymentStatus() {
+      return paymentStatus;
+    }
+
+    // setters
+    public void setSponsorPaymentId(String sponsorPaymentId) {
+      this.sponsorPaymentId = sponsorPaymentId;
     }
 
     public void setSponsorId(String sponsorId) {
         this.sponsorId = sponsorId;
     }
 
-    public String getOrganizationId() {
-        return organizationId;
-    }
-
     public void setOrganizationId(String organizationId) {
         this.organizationId = organizationId;
-    }
-
-    public Double getAmount() {
-        return amount;
     }
 
     public void setAmount(Double amount) {
         this.amount = amount;
     }
 
-    public PaymentStatus getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    public void setPaymentStatus(PaymentStatus paymentStatus) {
-        this.paymentStatus = paymentStatus;
+    public void setPaymentStatus(boolean paid) {
+        this.paymentStatus = (paid ? PaymentStatus.PAID : PaymentStatus.PENDING);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof SponsorPayment)) return false;
-        SponsorPayment that = (SponsorPayment) o;
-        return Objects.equals(sponsorPaymentId, that.sponsorPaymentId);
+        SponsorPayment sponsorPayment = (SponsorPayment) o;
+        return Objects.equals(sponsorPaymentId, sponsorPayment.sponsorPaymentId);
     }
 
     @Override
