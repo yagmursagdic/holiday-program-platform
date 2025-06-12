@@ -1,33 +1,33 @@
 #Fri Apr 18 16:26:30 CEST 2025
 micronaut:
-  application:
-    name: termservice
-  server:
-    port: 8082
-  router:
-    static-resources:
-      swagger:
-        paths: classpath:META-INF/swagger
-        mapping: /swagger/**
-      swagger-ui:
-        paths: classpath:META-INF/swagger/views/swagger-ui
-        mapping: /swagger-ui/**
+    application:
+        name: termservice
+    server:
+        port: ${SERVICE_PORT:8082}
+    router:
+        static-resources:
+            swagger:
+                paths: classpath:META-INF/swagger
+                mapping: /swagger/**
+            swagger-ui:
+                paths: classpath:META-INF/swagger/views/swagger-ui
+                mapping: /swagger-ui/**
 
 datasources:
-  default:
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
-    driverClassName: org.postgresql.Driver
+    default:
+        url: ${DATABASE_URL}
+        username: ${DATABASE_USERNAME}
+        password: ${DATABASE_PASSWORD}
+        driverClassName: org.postgresql.Driver
 
 jpa:
-  default:
-    properties:
-      hibernate:
-        hbm2ddl:
-          auto: update
-        show_sql: true
+    default:
+        properties:
+            hibernate:
+                hbm2ddl:
+                    auto: update
+                show_sql: true
 
 kafka:
-  bootstrap:
-    servers: kafka:29092
+    bootstrap:
+        servers: kafka:29092
