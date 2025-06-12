@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+
+import org.hibernate.annotations.GenericGenerator;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
@@ -17,7 +19,11 @@ import java.util.Objects;
 public class Term {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+        name = "UUID",
+        strategy = "org.hibernate.id.UUIDGenerator"
+    )
     private String termId;
 
     @NotNull("eventId must not be null")
@@ -41,7 +47,7 @@ public class Term {
     private double price;
 
     // need to know if caregiverIds are String or UUID
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> caregiverIds;
 
     public Term() {
