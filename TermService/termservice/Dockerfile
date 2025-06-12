@@ -7,7 +7,7 @@ WORKDIR /app
 COPY --chown=gradle:gradle . .
 
 # run the build without daemon
-RUN ./gradlew build --no-daemon || true
+RUN ./gradlew build --no-daemon
 
 # 2. Runtime image
 FROM openjdk:21-jdk-slim

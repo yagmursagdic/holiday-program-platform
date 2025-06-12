@@ -90,22 +90,18 @@ public class TermCommandService {
     }
 
     public void assignCaregiver(String termId, String caregiverId) {
-        try {
-            Term term = termRepository.findById(termId).orElseThrow(() -> new TermNotFoundException(termId));
-            List<String> caregiverIds = term.getCaregiverIds();
+        Term term = termRepository.findById(termId).orElseThrow(() -> new TermNotFoundException(termId));
+        List<String> caregiverIds = term.getCaregiverIds();
 
-            if (caregiverIds.contains(caregiverId)) {
-                throw new DuplicateAssignmentException(caregiverId);
-            }
-
-            caregiverIds.add(caregiverId);
-            term.setCaregiverIds(caregiverIds);
-            termRepository.update(term);
-
-            producer.sendCaregiverAssigned(termId, new CaregiverAssignedEvent(termId, caregiverId));
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to assign caregiver " + caregiverId + " to term " + termId, e);
+        if (caregiverIds.contains(caregiverId)) {
+            throw new DuplicateAssignmentException(caregiverId);
         }
+
+        caregiverIds.add(caregiverId);
+        term.setCaregiverIds(caregiverIds);
+        termRepository.update(term);
+
+        producer.sendCaregiverAssigned(termId, new CaregiverAssignedEvent(termId, caregiverId));
     }
 
     public void unassignCaregiver(String termId, String caregiverId) {
