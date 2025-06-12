@@ -37,7 +37,7 @@ public class UserPaymentCommandService {
                             created.getAmount(),
                             created.getPaymentDate(),
                             created.getPaymentDeadline(),
-                            created.getPaymentStatus()));
+                            created.getStatus()));
 
             return created;
         } catch (Exception e) {
@@ -54,7 +54,7 @@ public class UserPaymentCommandService {
                 existing.setAmount(payment.getAmount());
                 existing.setPaymentDate(payment.getPaymentDate());
                 existing.setPaymentDeadline(payment.getPaymentDeadline());
-                existing.setPaymentStatus(payment.getPaymentStatus());
+                existing.setStatus(payment.getStatus());
 
                 Payment updated = userPaymentRepository.update(existing);
 
@@ -64,7 +64,7 @@ public class UserPaymentCommandService {
                         updated.getAmount(),
                         updated.getPaymentDate(),
                         updated.getPaymentDeadline(),
-                        updated.getPaymentStatus()
+                        updated.getStatus()
                 ));
 
                 return updated;
@@ -93,10 +93,10 @@ public class UserPaymentCommandService {
     public boolean markUserPaymentAsPaid(String paymentId) {
         try{
             Payment payment = userPaymentRepository.findById(paymentId).orElseThrow(() -> new PaymentNotFoundException(paymentId));
-            payment.setPaymentStatus(PaymentStatus.PAID);
+            payment.setStatus(PaymentStatus.PAID);
             userPaymentRepository.update(payment);
 
-            producer.sendUserPaymentStatusUpdated(paymentId, new UserPaymentStatusUpdatedEvent(paymentId, payment.getPaymentStatus()));
+            producer.sendUserPaymentStatusUpdated(paymentId, new UserPaymentStatusUpdatedEvent(paymentId, payment.getStatus()));
             //notify aufrufen
             return true;
         } catch (Exception e) {
