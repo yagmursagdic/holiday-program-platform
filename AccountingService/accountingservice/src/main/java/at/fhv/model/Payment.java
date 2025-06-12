@@ -2,25 +2,26 @@ package at.fhv.model;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 import io.micronaut.serde.annotation.Serdeable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Serdeable
 @Entity
 @Table(name = "payment_records")
 public class Payment {
 
-    //UUID
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "payment_id")
     private String paymentId;
+
+    @PrePersist
+    public void generateId() {
+        if (paymentId == null) {
+            paymentId = UUID.randomUUID().toString();
+        }
+    }
 
     private String userId;
     private String termId;
@@ -29,6 +30,7 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private LocalDate paymentDate;
     private LocalDate paymentDeadline;
+    @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
 
@@ -71,7 +73,7 @@ public class Payment {
       return paymentDeadline;
     }
 
-    public PaymentStatus getPaymentStatus() {
+    public PaymentStatus getStatus() {
       return status;
     }
 
@@ -96,7 +98,7 @@ public class Payment {
       this.paymentDeadline = paymentDeadline;
     }
 
-    public void setPaymentStatus(PaymentStatus status) {
+    public void setStatus(PaymentStatus status) {
       this.status = status;
     }
 

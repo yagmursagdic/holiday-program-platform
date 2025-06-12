@@ -3,6 +3,7 @@ package at.fhv.repository;
 import java.util.List;
 
 import at.fhv.model.Payment;
+import at.fhv.model.PaymentStatus;
 import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.repository.CrudRepository;
 
@@ -11,10 +12,8 @@ public interface UserPaymentRepository extends CrudRepository<Payment, String> {
 
   List<Payment> findByTermId(String termId);
 
-  List<Payment> findOpenPaymentsByTermId(String termId);
+  List<Payment> findByTermIdAndStatus(String termId, PaymentStatus status);
 
-  List<Payment> findOpenPaymentsByUserId(String userId);
-
-  List<Payment> findPaymentStatusByTermId(String userId, String termId);
+  List<Payment> findByUserIdAndStatus(String userId, PaymentStatus status);
 }
 

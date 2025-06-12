@@ -142,13 +142,12 @@ public class UserPaymentController {
     }
 
     // Get user payment status for a term
-    @Get("/status/{userId}/{termId}")
-    public HttpResponse<?> getUserPaymentStatusForTerm(@PathVariable String userId, @PathVariable String termId) {
+    @Get("/status/{termId}")
+    public HttpResponse<?> getUserPaymentStatusForTerm(@PathVariable String termId) {
         try {
-            List<Payment> payments = userPaymentQueryService.getPaymentStatusByTermId(userId, termId);
+            Optional<Payment> payments = userPaymentQueryService.getPaymentById(termId);
             return HttpResponse.ok(Map.of(
                     "message", "Payment status found",
-                    "userId", userId,
                     "termId", termId,
                     "payments", payments));
         } catch (Exception e) {

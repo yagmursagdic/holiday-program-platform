@@ -2,6 +2,7 @@ package at.fhv.service;
 
 import at.fhv.exception.PaymentNotFoundException;
 import at.fhv.model.Payment;
+import at.fhv.model.PaymentStatus;
 import at.fhv.repository.UserPaymentRepository;
 import jakarta.inject.Singleton;
 
@@ -28,14 +29,11 @@ public class UserPaymentQueryService {
     }
 
     public List<Payment> getAllOpenPaymentsByTermId(String termId) {
-        return userPaymentRepository.findOpenPaymentsByTermId(termId);
+        return userPaymentRepository.findByTermIdAndStatus(termId, PaymentStatus.OPEN);
     }
 
     public List<Payment> getAllOpenPaymentsByUserId(String userId) {
-        return userPaymentRepository.findOpenPaymentsByUserId(userId);
+        return userPaymentRepository.findByUserIdAndStatus(userId, PaymentStatus.OPEN);
     }
 
-    public List<Payment> getPaymentStatusByTermId(String userId, String termId) {
-        return userPaymentRepository.findPaymentStatusByTermId(userId, termId);
-    }
 }

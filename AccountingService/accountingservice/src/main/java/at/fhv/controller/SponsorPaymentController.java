@@ -38,7 +38,7 @@ public class SponsorPaymentController {
     }
 
     // Get sponsor payments
-    @Get("/payments")
+    @Get("/payments/{sponsorId}")
     public HttpResponse<?> getSponsorPayments(@PathVariable String sponsorId) {
         try {
             List<SponsorPayment> sponsorPayments = sponsorPaymentQueryService.getAllSponsorPaymentsBySponsorId(sponsorId);

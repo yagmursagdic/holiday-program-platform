@@ -3,6 +3,7 @@ package at.fhv.model;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 import java.util.Objects;
+import java.util.UUID;
 
 @Serdeable
 @Entity
@@ -10,8 +11,15 @@ import java.util.Objects;
 public class SponsorPayment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "sponsor_payment_id")
     private String sponsorPaymentId;
+
+    @PrePersist
+    public void generateId() {
+        if (sponsorPaymentId == null) {
+            sponsorPaymentId = UUID.randomUUID().toString();
+        }
+    }
     private String sponsorId;
     private String organizationId;
     private Double amount;
