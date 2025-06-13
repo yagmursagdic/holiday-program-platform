@@ -6,6 +6,9 @@ WORKDIR /app
 # copy source into the container with owner gradle
 COPY --chown=gradle:gradle . .
 
+# line endings and permissions when on windows machine
+RUN sed -i 's/\r$//' gradlew && chmod +x gradlew
+
 # run the build without daemon
 RUN ./gradlew build --no-daemon
 
