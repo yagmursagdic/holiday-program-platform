@@ -27,7 +27,6 @@ public class Payment {
     private String termId;
     private double amount;
 
-    @Enumerated(EnumType.STRING)
     private LocalDate paymentDate;
     private LocalDate paymentDeadline;
     @Enumerated(EnumType.STRING)
